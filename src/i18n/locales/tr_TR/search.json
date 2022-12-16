@@ -1,18 +1,18 @@
 {
-  "error_description": "",
-  "error_heading": "",
-  "error_subheading": "",
-  "heading": "",
-  "no_results_heading": "",
+  "error_description": "Bu sayfayı yeniden yükleyin veya daha sonra tekrar deneyin.",
+  "error_heading": "Bir şeyler yanlış gitti",
+  "error_subheading": "Görünüşe göre bu sayfayı yüklerken bir sorunumuz vardı ... ",
+  "heading": "Arama Sonuçları",
+  "no_results_heading": "\"{{query}}\" için sonuç bulunamadı",
   "search_bar": {
     "clear_search_label": "Aramayı Temizle",
     "search_label": "Arama",
     "search_placeholder": "Arama..."
   },
-  "start_typing": "",
-  "suggestions": "",
-  "tip_one": "",
-  "tip_three": "",
-  "tip_two": "",
-  "title": ""
+  "start_typing": "Arama kutusunda aramaya başlamak için bir şey",
+  "suggestions": "Öneriler:",
+  "tip_one": "Bütün kelimelerin doğru hecelendiğinden emin ol",
+  "tip_three": "Farklı arama terimlerini deneyin",
+  "tip_two": "Arama terimlerini daha genel hale getirin",
+  "title": "{{results}} \"{{query}} \" için sonuç"
 }
