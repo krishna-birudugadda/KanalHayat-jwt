@@ -5,10 +5,8 @@ import { useSearchParams } from 'react-router-dom';
 
 import ErrorPage from '#components/ErrorPage/ErrorPage';
 import AccountModal from '#src/containers/AccountModal/AccountModal';
-import { IS_DEMO_MODE, IS_DEVELOPMENT_BUILD, IS_PREVIEW_MODE } from '#src/utils/common';
-import DemoConfigDialog from '#components/DemoConfigDialog/DemoConfigDialog';
+import { IS_DEMO_MODE,  IS_PREVIEW_MODE } from '#src/utils/common';
 import LoadingOverlay from '#components/LoadingOverlay/LoadingOverlay';
-import DevConfigSelector from '#components/DevConfigSelector/DevConfigSelector';
 import { cleanupQueryParams, getConfigSource } from '#src/utils/configOverride';
 import { loadAndValidateConfig } from '#src/utils/configLoad';
 import { initSettings } from '#src/stores/SettingsController';
@@ -26,7 +24,6 @@ const Root: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const configSource = useMemo(() => getConfigSource(searchParams, settingsQuery.data), [searchParams, settingsQuery.data]);
-
   // Update the query string to maintain the right params
   useEffect(() => {
     if (settingsQuery.data && cleanupQueryParams(searchParams, settingsQuery.data, configSource)) {
@@ -70,10 +67,10 @@ const Root: FC = () => {
           helpLink={'https://github.com/jwplayer/ott-web-app/blob/develop/docs/configuration.md'}
         />
       )}
-      {IS_DEMO_OR_PREVIEW && <DemoConfigDialog selectedConfigSource={configSource} configQuery={configQuery} />}
+      {/* {IS_DEMO_OR_PREVIEW && <DemoConfigDialog selectedConfigSource={configSource} configQuery={configQuery} />} */}
       <AccountModal />
       {/* Config select control to improve testing experience */}
-      {(IS_DEVELOPMENT_BUILD || IS_PREVIEW_MODE) && <DevConfigSelector selectedConfig={configSource} />}
+      {/* {(IS_DEVELOPMENT_BUILD || IS_PREVIEW_MODE) && <DevConfigSelector selectedConfig={configSource} />} */}
     </>
   );
 };

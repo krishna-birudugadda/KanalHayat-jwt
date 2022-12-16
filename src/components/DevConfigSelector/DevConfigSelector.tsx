@@ -5,29 +5,46 @@ import styles from './DevConfigSelector.module.scss';
 
 import Dropdown from '#components/Dropdown/Dropdown';
 import { getConfigNavigateCallback } from '#src/utils/configOverride';
-import { jwDevEnvConfigs, testConfigs } from '#test/constants';
+import { logDev } from '#src/utils/common';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   selectedConfig: string | undefined;
 }
 
-const configs = import.meta.env.MODE === 'jwdev' ? jwDevEnvConfigs : testConfigs;
-const configOptions: { value: string; label: string }[] = [
-  { label: 'Select an App Config', value: '' },
-  ...Object.values(configs).map(({ id, label }) => ({ value: id, label: `${id.length > 8 ? 'ext-json' : id} - ${label}` })),
+// const configs = import.meta.env.MODE === 'jwdev' ? jwDevEnvConfigs : testConfigs;
+ const configs = [
+  {
+    value: 'pq0iuoqh',
+    label: 'English',
+    language: 'en-US',
+  },
+  {
+    value: 'tckmkypm',
+    label: 'Trukish',
+    language: 'tr-TR',
+  },
 ];
 
-const DevConfigSelector = ({ selectedConfig }: Props) => {
+const ConfigSelector = ({ selectedConfig }: Props) => {
   const configNavigate = getConfigNavigateCallback(useNavigate());
+  const navigate = useNavigate();
+  const { i18n } = useTranslation();
 
+  const getLanguage = (configValue: string) => {
+    const currentConfig = configs.find(({ value }) => configValue === value);
+    return currentConfig?.language;
+  };
   const onChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       configNavigate(event.target.value);
+      i18n.changeLanguage(getLanguage(event.target.value));
+      navigate(0);
     },
-    [configNavigate],
+    [configNavigate, i18n, navigate],
   );
 
-  return <Dropdown className={styles.dropdown} size="small" options={configOptions} name="config-select" value={selectedConfig || ''} onChange={onChange} />;
+  return <Dropdown size="small" options={configs} name="config-select" value={selectedConfig || ''} onChange={onChange} />;
 };
 
-export default DevConfigSelector;
+export default ConfigSelector;

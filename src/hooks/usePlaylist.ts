@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import useContentProtection from '#src/hooks/useContentProtection';
 import { generatePlaylistPlaceholder } from '#src/utils/collection';
 import type { GetPlaylistParams } from '#types/playlist';
@@ -7,6 +9,8 @@ import { queryClient } from '#src/providers/QueryProvider';
 const placeholderData = generatePlaylistPlaceholder(30);
 
 export default function usePlaylist(playlistId?: string, params: GetPlaylistParams = {}, enabled: boolean = true, usePlaceholderData: boolean = true) {
+  const { i18n } = useTranslation();
+  const currentLanguage = i18n.language;
   const callback = async (token?: string, drmPolicyId?: string) => {
     const playlist = await getPlaylistById(playlistId, { token, ...params }, drmPolicyId);
 
@@ -19,5 +23,17 @@ export default function usePlaylist(playlistId?: string, params: GetPlaylistPara
     return playlist;
   };
 
-  return useContentProtection('playlist', playlistId, callback, params, enabled, usePlaceholderData ? placeholderData : undefined);
+  const { data, ...rest } = useContentProtection('playlist', playlistId, callback, params, enabled, usePlaceholderData ? placeholderData : undefined);
+
+  const { trDescription = '', trTitle = '', playlist = [] } = data || {};
+  if (currentLanguage == 'tr-TR') {
+    const updatedPlaylist = [...playlist].map((playlistItem) => {
+      const { trDescription: itemTrDescription = '', trTitle: itemTrTitle = '' } = playlistItem;
+      return { ...playlistItem, title: itemTrTitle, description: itemTrDescription };
+    });
+
+    return { ...rest, data: { ...data, title: trTitle, description: trDescription, playlist: updatedPlaylist } };
+  }
+
+  return { data, ...rest };
 }

@@ -1,21 +1,28 @@
-import React, { ReactFragment, useState } from 'react';
 import classNames from 'classnames';
+import React, { ReactFragment, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useSearchParams } from 'react-router-dom';
+
+import ConfigSelector from '../DevConfigSelector/DevConfigSelector';
 
 import styles from './Header.module.scss';
 
-import AccountCircle from '#src/icons/AccountCircle';
-import SearchBar, { Props as SearchBarProps } from '#components/SearchBar/SearchBar';
+import Button from '#components/Button/Button';
+import IconButton from '#components/IconButton/IconButton';
 import Logo from '#components/Logo/Logo';
+import Popover from '#components/Popover/Popover';
+import SearchBar, { Props as SearchBarProps } from '#components/SearchBar/SearchBar';
+import UserMenu from '#components/UserMenu/UserMenu';
+import useBreakpoint, { Breakpoint } from '#src/hooks/useBreakpoint';
+import AccountCircle from '#src/icons/AccountCircle';
+import CloseIcon from '#src/icons/Close';
 import Menu from '#src/icons/Menu';
 import SearchIcon from '#src/icons/Search';
-import CloseIcon from '#src/icons/Close';
-import Button from '#components/Button/Button';
-import Popover from '#components/Popover/Popover';
-import UserMenu from '#components/UserMenu/UserMenu';
+import { initSettings } from '#src/stores/SettingsController';
+import { cleanupQueryParams, getConfigSource } from '#src/utils/configOverride';
 import { getPublicUrl } from '#src/utils/domHelpers';
-import useBreakpoint, { Breakpoint } from '#src/hooks/useBreakpoint';
-import IconButton from '#components/IconButton/IconButton';
+
 
 type TypeHeader = 'static' | 'fixed';
 
@@ -63,6 +70,24 @@ const Header: React.FC<Props> = ({
     [styles.brandCentered]: breakpoint <= Breakpoint.sm,
     [styles.mobileSearchActive]: searchActive && breakpoint <= Breakpoint.sm,
   });
+
+  const settingsQuery = useQuery('settings-init', initSettings, {
+    enabled: true,
+    retry: 1,
+    refetchInterval: false,
+  });
+  
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const configSource = useMemo(() => getConfigSource(searchParams, settingsQuery.data), [searchParams, settingsQuery.data]);
+  // Update the query string to maintain the right params
+  useEffect(() => {
+    if (settingsQuery.data && cleanupQueryParams(searchParams, settingsQuery.data, configSource)) {
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [configSource, searchParams, setSearchParams, settingsQuery.data]);
+
+ 
 
   const search =
     breakpoint <= Breakpoint.sm ? (
@@ -138,6 +163,7 @@ const Header: React.FC<Props> = ({
         <nav className={styles.nav} aria-label="menu">
           {logoLoaded || !logoSrc ? children : null}
         </nav>
+        <div> <ConfigSelector selectedConfig={configSource}></ConfigSelector></div>
         <div className={styles.search}>{searchEnabled ? search : null}</div>
         {renderUserActions()}
       </div>
