@@ -43,7 +43,7 @@ const ConfigSelector = ({ selectedConfig }: Props) => {
     },
     [configNavigate, i18n, navigate],
   );
-
+      // removed the className={styles.dropDown} because the dropDown is rendering at the bottom right corner.
   return <Dropdown size="small" options={configs} name="config-select" value={selectedConfig || ''} onChange={onChange} />;
 };
 
