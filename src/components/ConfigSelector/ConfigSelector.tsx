@@ -1,30 +1,16 @@
 import { ChangeEvent, useCallback } from 'react';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
-import styles from './DevConfigSelector.module.scss';
+import styles from './ConfigSelector.module.scss';
 
 import Dropdown from '#components/Dropdown/Dropdown';
 import { getConfigNavigateCallback } from '#src/utils/configOverride';
-import { logDev } from '#src/utils/common';
-import { useTranslation } from 'react-i18next';
+import { configs } from '#src/config';
 
 interface Props {
   selectedConfig: string | undefined;
 }
-
-// const configs = import.meta.env.MODE === 'jwdev' ? jwDevEnvConfigs : testConfigs;
- const configs = [
-  {
-    value: 'pq0iuoqh',
-    label: 'English',
-    language: 'en-US',
-  },
-  {
-    value: 'tckmkypm',
-    label: 'Trukish',
-    language: 'tr-TR',
-  },
-];
 
 const ConfigSelector = ({ selectedConfig }: Props) => {
   const configNavigate = getConfigNavigateCallback(useNavigate());
@@ -35,6 +21,7 @@ const ConfigSelector = ({ selectedConfig }: Props) => {
     const currentConfig = configs.find(({ value }) => configValue === value);
     return currentConfig?.language;
   };
+
   const onChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
       configNavigate(event.target.value);
