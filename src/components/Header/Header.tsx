@@ -1,10 +1,10 @@
 import classNames from 'classnames';
-import React, { ReactFragment, useEffect, useMemo, useState } from 'react';
+import React, { ReactFragment, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 
-import ConfigSelector from '../DevConfigSelector/DevConfigSelector';
+import ConfigSelector from '../ConfigSelector/ConfigSelector';
 
 import styles from './Header.module.scss';
 
@@ -20,9 +20,8 @@ import CloseIcon from '#src/icons/Close';
 import Menu from '#src/icons/Menu';
 import SearchIcon from '#src/icons/Search';
 import { initSettings } from '#src/stores/SettingsController';
-import { cleanupQueryParams, getConfigSource } from '#src/utils/configOverride';
+import { getConfigSource } from '#src/utils/configOverride';
 import { getPublicUrl } from '#src/utils/domHelpers';
-
 
 type TypeHeader = 'static' | 'fixed';
 
@@ -66,6 +65,7 @@ const Header: React.FC<Props> = ({
   const { t } = useTranslation('menu');
   const [logoLoaded, setLogoLoaded] = useState(false);
   const breakpoint = useBreakpoint();
+  const [searchParams] = useSearchParams();
   const headerClassName = classNames(styles.header, styles[headerType], {
     [styles.brandCentered]: breakpoint <= Breakpoint.sm,
     [styles.mobileSearchActive]: searchActive && breakpoint <= Breakpoint.sm,
@@ -76,18 +76,8 @@ const Header: React.FC<Props> = ({
     retry: 1,
     refetchInterval: false,
   });
-  
-  const [searchParams, setSearchParams] = useSearchParams();
-  
-  const configSource = useMemo(() => getConfigSource(searchParams, settingsQuery.data), [searchParams, settingsQuery.data]);
-  // Update the query string to maintain the right params
-  useEffect(() => {
-    if (settingsQuery.data && cleanupQueryParams(searchParams, settingsQuery.data, configSource)) {
-      setSearchParams(searchParams, { replace: true });
-    }
-  }, [configSource, searchParams, setSearchParams, settingsQuery.data]);
 
- 
+  const configSource = useMemo(() => getConfigSource(searchParams, settingsQuery.data), [searchParams, settingsQuery.data]);
 
   const search =
     breakpoint <= Breakpoint.sm ? (
@@ -163,7 +153,9 @@ const Header: React.FC<Props> = ({
         <nav className={styles.nav} aria-label="menu">
           {logoLoaded || !logoSrc ? children : null}
         </nav>
-        <div> <ConfigSelector selectedConfig={configSource}></ConfigSelector></div>
+        <div style={{ marginRight: '8px' }}>
+          <ConfigSelector selectedConfig={configSource}></ConfigSelector>
+        </div>
         <div className={styles.search}>{searchEnabled ? search : null}</div>
         {renderUserActions()}
       </div>
