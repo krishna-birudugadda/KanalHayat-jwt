@@ -28,5 +28,5 @@ export const configs = [
   },
 ];
 
-export const languageTitleMap: any = { 'tr-TR': 'trTitle', 'uz-UZ': 'uzTitle' };
-export const languageDescriptionMap: any = { 'tr-TR': 'trDescription', 'uz-UZ': 'uzDescription' };
+export const languageTitleMap: {[key:string]:string}  = { 'tr-TR': 'trTitle', 'uz-UZ': 'uzTitle' };
+export const languageDescriptionMap: {[key:string]:string}  = { 'tr-TR': 'trDescription', 'uz-UZ': 'uzDescription' };

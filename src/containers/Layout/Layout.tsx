@@ -143,12 +143,21 @@ const Layout = () => {
           {menu.map((item) => (
             <Button key={item.contentId} label={item.label} to={`/p/${item.contentId}`} variant="text" />
           ))}
+          <Button  label={"Contact"} to={`/o/contact-us`} tabIndex={sideBarOpen ? 0 : -1} variant="text"/>
+          <Button  label={"About"} to={`/o/about`} tabIndex={sideBarOpen ? 0 : -1} variant="text"/>
+          <Button  label={"Privacy Policy"} to={`/o/privacy-policy`} tabIndex={sideBarOpen ? 0 : -1} variant="text"/>
+          <Button  label={"Terms"} to={`o/terms-and-conditions`} tabIndex={sideBarOpen ? 0 : -1} variant="text"/>
         </Header>
         <Sidebar isOpen={sideBarOpen} onClose={() => setSideBarOpen(false)}>
           <MenuButton label={t('home')} to="/" tabIndex={sideBarOpen ? 0 : -1} />
           {menu.map((item) => (
             <MenuButton key={item.contentId} label={item.label} to={`/p/${item.contentId}`} tabIndex={sideBarOpen ? 0 : -1} />
           ))}
+          <MenuButton  label={"Contact"} to={`/o/contact-us`} tabIndex={sideBarOpen ? 0 : -1} />
+          <MenuButton  label={"About"} to={`/o/about`} tabIndex={sideBarOpen ? 0 : -1} />
+          <MenuButton  label={"Privacy Policy"} to={`/o/privacy-policy`} tabIndex={sideBarOpen ? 0 : -1} />
+          <MenuButton  label={"Terms"} to={`o/terms-and-conditions`} tabIndex={sideBarOpen ? 0 : -1} />
+
           <hr className={styles.divider} />
           {renderUserActions()}
           <div className={styles.sideBardropDown}>
