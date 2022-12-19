@@ -12,6 +12,9 @@ import User from '#src/pages/User/User';
 import MediaScreenRouter from '#src/pages/ScreenRouting/MediaScreenRouter';
 import PlaylistScreenRouter from '#src/pages/ScreenRouting/PlaylistScreenRouter';
 import Layout from '#src/containers/Layout/Layout';
+import ContactUs from '#src/pages/ContactUs/ContactUs';
+import PrivacyPolicy from '#src/pages/PrivacyPolicy/PrivacyPolicy';
+import TermsAndConditions from '#src/pages/TermsAndConditions/TermsAndConditions';
 
 export default function AppRoutes() {
   const { t } = useTranslation('error');
@@ -26,6 +29,9 @@ export default function AppRoutes() {
         <Route path="/q/*" element={<Search />} />
         <Route path="/u/*" element={<User />} />
         <Route path="/o/about" element={<About />} />
+        <Route path="/o/contact-us" element={<ContactUs />} />
+        <Route path="/o/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/o/terms-and-conditions" element={<TermsAndConditions />} />
         <Route
           path="/*"
           element={<ErrorPage title={t('notfound_error_heading', 'Not found')} message={t('notfound_error_description', "This page doesn't exist.")} />}
