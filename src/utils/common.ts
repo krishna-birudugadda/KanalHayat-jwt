@@ -1,3 +1,4 @@
+import { languageDescriptionMap, languageTitleMap } from '#src/config';
 import { overrideIPCookieKey } from '#test/constants';
 
 export function debounce<T extends (...args: any[]) => void>(callback: T, wait = 200) {
@@ -86,3 +87,18 @@ export function getOverrideIP() {
 export function testId(value: string | undefined) {
   return IS_DEVELOPMENT_BUILD || IS_TEST_MODE || IS_PREVIEW_MODE ? value : undefined;
 }
+export const isKeyPresent =(data: any , language: string)=>{
+  const titleKey = languageTitleMap[language];
+  const descriptionKey = languageDescriptionMap[language];
+return titleKey in data && descriptionKey in data;
+}
+
+export const getTitleTranslation =(data: any, language: string) =>{
+  const titleKey = languageTitleMap[language];
+  return data[titleKey]
+}
+export const getDescriptionTranslation =(data: any, language: string) =>{
+  const descriptionKey = languageDescriptionMap[language];
+  return data[descriptionKey];
+}
+
