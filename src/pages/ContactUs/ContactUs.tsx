@@ -1,8 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import styles from './ContactUs.module.scss';
-
 const ContactUs = () => {
   const { i18n } = useTranslation();
   const currentLanguage = i18n.language;
