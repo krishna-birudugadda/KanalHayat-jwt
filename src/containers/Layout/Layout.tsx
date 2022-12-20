@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import shallow from 'zustand/shallow';
+import { useSearchParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
 
 import styles from './Layout.module.scss';
 
@@ -19,6 +21,9 @@ import DynamicBlur from '#components/DynamicBlur/DynamicBlur';
 import MenuButton from '#components/MenuButton/MenuButton';
 import UserMenu from '#components/UserMenu/UserMenu';
 import { addQueryParam } from '#src/utils/location';
+import ConfigSelector from '#src/components/ConfigSelector/ConfigSelector';
+import { getConfigSource } from '#src/utils/configOverride';
+import { initSettings } from '#src/stores/SettingsController';
 
 const Layout = () => {
   const location = useLocation();
@@ -41,10 +46,16 @@ const Layout = () => {
   );
   const { updateSearchQuery, resetSearchQuery } = useSearchQueryUpdater();
   const isLoggedIn = !!useAccountStore((state) => state.user);
-
+  const [searchParams] = useSearchParams();
+  const settingsQuery = useQuery('settings-init', initSettings, {
+    enabled: true,
+    retry: 1,
+    refetchInterval: false,
+  });
   const searchInputRef = useRef<HTMLInputElement>(null) as React.MutableRefObject<HTMLInputElement>;
 
   const [sideBarOpen, setSideBarOpen] = useState(false);
+  const configSource = useMemo(() => getConfigSource(searchParams, settingsQuery.data), [searchParams, settingsQuery.data]);
   const hasDynamicBlur = dynamicBlur === true;
   const banner = assets.banner;
 
@@ -140,6 +151,9 @@ const Layout = () => {
           ))}
           <hr className={styles.divider} />
           {renderUserActions()}
+          <div className={styles.sideBardropDown}>
+            <ConfigSelector selectedConfig={configSource}></ConfigSelector>
+          </div>
         </Sidebar>
         <Outlet />
       </div>
