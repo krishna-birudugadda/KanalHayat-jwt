@@ -9,6 +9,7 @@ import type { Playlist } from '#types/playlist';
 import PlaylistGrid from '#src/pages/ScreenRouting/playlistScreens/PlaylistGrid/PlaylistGrid';
 import PlaylistLiveChannels from '#src/pages/ScreenRouting/playlistScreens/PlaylistLiveChannels/PlaylistLiveChannels';
 import { ScreenMap } from '#src/pages/ScreenRouting/ScreenMap';
+import { logDev } from '#src/utils/common';
 
 export const playlistScreenMap = new ScreenMap<Playlist>();
 
@@ -21,7 +22,7 @@ const PlaylistScreenRouter = () => {
   const id = params.id || '';
   const { isLoading, isFetching, error, data } = usePlaylist(id);
   const { t } = useTranslation('error');
-
+logDev('programme', data);
   if (isLoading) {
     return <Loading />;
   }

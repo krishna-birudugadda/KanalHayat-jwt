@@ -1,5 +1,6 @@
 import { languageDescriptionMap, languageTitleMap } from '#src/config';
 import { overrideIPCookieKey } from '#test/constants';
+import type { PlaylistItem } from '#types/playlist';
 
 export function debounce<T extends (...args: any[]) => void>(callback: T, wait = 200) {
   let timeout: NodeJS.Timeout | null;
@@ -87,18 +88,55 @@ export function getOverrideIP() {
 export function testId(value: string | undefined) {
   return IS_DEVELOPMENT_BUILD || IS_TEST_MODE || IS_PREVIEW_MODE ? value : undefined;
 }
-export const isKeyPresent =(data: any , language: string)=>{
+export const isKeyPresent = (data: any, language: string) => {
   const titleKey = languageTitleMap[language];
   const descriptionKey = languageDescriptionMap[language];
-return titleKey in data && descriptionKey in data;
-}
+  return titleKey in data && descriptionKey in data;
+};
 
-export const getTitleTranslation =(data: any, language: string) =>{
+export const getTitleTranslation = (data: any, language: string) => {
   const titleKey = languageTitleMap[language];
-  return data[titleKey]
-}
-export const getDescriptionTranslation =(data: any, language: string) =>{
+  return data[titleKey];
+};
+export const getDescriptionTranslation = (data: any, language: string) => {
   const descriptionKey = languageDescriptionMap[language];
   return data[descriptionKey];
+};
+
+ export const getUpdatedPlayList =(playlist: PlaylistItem [], language: string) =>{
+  return [...playlist].map((playlistItem) => {
+    return getTranslatedData(playlistItem, language);
+  });
 }
 
+export const getTranslatedData = (data: any, currentLanguage: string) => {
+  let { title: titleTranslation, description: descriptionTranslation } = data || {};
+  if (data) {
+    if (currentLanguage === 'tr-TR') {
+      if (isKeyPresent(data, currentLanguage)) {
+        titleTranslation = getTitleTranslation(data, 'tr-TR');
+        descriptionTranslation = getDescriptionTranslation(data, 'tr-TR');
+      }
+    } else if (currentLanguage === 'uz-UZ') {
+      if (isKeyPresent(data, currentLanguage)) {
+        titleTranslation = getTitleTranslation(data, 'uz-UZ');
+        descriptionTranslation = getDescriptionTranslation(data, 'uz-UZ');
+      } else {
+        if (isKeyPresent(data, 'tr-TR')) {
+          titleTranslation = getTitleTranslation(data, 'tr-TR');
+          descriptionTranslation = getDescriptionTranslation(data, 'tr-TR');
+        }
+      }
+    } else if (currentLanguage === 'kr-KR') {
+      if (isKeyPresent(data, currentLanguage)) {
+        titleTranslation = getTitleTranslation(data, 'kr-KR');
+        descriptionTranslation = getDescriptionTranslation(data, 'kr-KR');
+      } else if (isKeyPresent(data, 'tr-TR')) {
+        titleTranslation = getTitleTranslation(data, 'tr-TR');
+        descriptionTranslation = getDescriptionTranslation(data, 'tr-TR');
+      }
+    }
+  }
+  
+  return { ...data, title: titleTranslation, description: descriptionTranslation,  }
+};
